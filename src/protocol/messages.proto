@@ -1,0 +1,160 @@
+// Generic
+
+message ItemCreatedResponse {
+  required int64 item_id = 1;
+}
+
+// Version
+
+message GetVersionResponse {
+  required int32 major_version = 1;
+  required int32 minor_version = 2;
+  required int32 patch_version = 3;
+}
+
+// Renderers
+
+message Camera {
+  required int64 id = 1;
+  repeated double matrix_values = 2 [packed=true];
+  repeated double projection_matrix_values = 3 [packed=true];
+}
+
+message CreateRendererRequest {
+  enum RendererType {
+    DISPLAY = 1;
+    WEBGL = 2;
+  }
+
+  message RendererOption {
+    required string key = 1;
+    required string value = 2;
+  }
+
+  required RendererType r_type = 1;
+  repeated RendererOption options = 2;
+  repeated Camera cameras = 3;
+  repeated double viewer_matrix_values = 4 [packed=true];
+}
+
+message DeleteRendererRequest {
+  required int64 renderer_id = 1;
+}
+
+message CreateCameraRequest {
+  required int64 renderer_id = 1;
+  repeated Camera camera = 2;
+}
+
+message DeleteCameraRequest {
+  required int64 renderer_id = 1;
+  repeated int64 camera_id = 2;
+}
+
+message UpdateViewerMatrixRequest {
+  required int64 renderer_id = 1;
+  repeated double matrix_values = 2 [packed=true];
+}
+
+message UpdateCameraMatrixRequest {
+  required int64 renderer_id = 1;
+  required int64 camera_id = 2;
+  repeated double matrix_values = 3 [packed=true];
+}
+
+message UpdateCameraProjectionRequest {
+  required int64 renderer_id = 1;
+  required int64 camera_id = 2;
+  repeated double matrix_values = 3 [packed=true];
+}
+
+// Graph
+
+message Element {
+  enum ElementType {
+    MESH = 1;
+  }
+
+  required ElementType e_type = 1;
+  repeated Element children = 2;
+}
+
+message CreateGraphRequest {
+  repeated Element children = 1;
+}
+
+message AddElementsRequest {
+  required int64 graph_id = 1;
+  required int64 parent_id = 2;
+  optional int64 previous_sibling_id = 3;
+  repeated Element added_elements = 4;
+}
+
+message UpdateElementsRequest {
+  required int64 graph_id = 1;
+  // element ids to changed attributes
+}
+
+message DeleteElementsRequest {
+  required int64 graph_id = 1;
+  repeated int64 deleted_element_ids = 2;
+}
+
+// Request
+
+message Request {
+  enum RequestType {
+    GET_VERSION = 1;
+
+    CREATE_RENDERER = 2;
+    DELETE_RENDERER = 3;
+    UPDATE_VIEWER_MATRIX = 4;
+    CREATE_CAMERA = 5;
+    DELETE_CAMERA = 6;
+    UPDATE_CAMERA_MATRIX = 7;
+    UDPATE_CAMERA_PROJECTION = 8;
+
+    CREATE_GRAPH_REQUEST = 9;
+    ADD_ELEMENTS_REQUEST = 10;
+    UPDATE_ELEMENTS_REQUEST = 11;
+    DELETE_ELEMENTS_REQUEST = 12;
+  }
+
+  required RequestType r_type = 1;
+
+  optional CreateRendererRequest create_renderer_request = 2;
+  optional DeleteRendererRequest delete_renderer_request = 3;
+  optional UpdateViewerMatrixRequest update_viewer_matrix_request = 4;
+  optional CreateCameraRequest create_camera_request = 5;
+  optional DeleteCameraRequest delete_camera_request = 6;
+  optional UpdateCameraMatrixRequest update_camera_matrix_request = 7;
+  optional UpdateCameraProjectionRequest update_camera_projection_request = 8;
+
+  optional CreateGraphRequest create_graph_request = 9;
+  optional AddElementsRequest add_elements_request = 10;
+  optional UpdateElementsRequest update_elements_request = 11;
+  optional DeleteElementsRequest delete_elements_request = 12;
+}
+
+message Requests {
+  repeated Request requests = 1;
+}
+
+// Response
+
+message Response {
+  enum ResponseType {
+    GET_VERSION = 1;
+    ITEM_CREATED = 2;
+  }
+
+  required ResponseType r_type = 1;
+  required int64 index = 2;
+
+  optional GetVersionResponse get_version_response = 3;
+  optional ItemCreatedResponse item_created_response = 4;
+}
+
+message Responses {
+  repeated Response responses = 1;
+}

@@ -4,3 +4,6 @@ version = "0.1.0"
 authors = ["Jason Sommer <j@jsdir.net>"]
 
 [dependencies]
+
+[dependencies.zmq]
+git = "https://github.com/erickt/rust-zmq.git"
