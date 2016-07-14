@@ -5,5 +5,8 @@ authors = ["Jason Sommer <j@jsdir.net>"]
 
 [dependencies]
 
+[dependencies.protobuf]
+version = "*"
+
 [dependencies.zmq]
 git = "https://github.com/erickt/rust-zmq.git"
