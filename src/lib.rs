@@ -3,14 +3,16 @@ extern crate protobuf;
 
 pub mod protocol;
 
+use protocol::messages;
+use protobuf::*;
+
 pub struct Connection {
+    ctx: zmq::Context,
+    socket: zmq::Socket
 }
 
-// struct RemoteGraphAddr {
-// }
-
 impl Connection {
-    pub fn new(addr: &str) {
+    pub fn new(addr: &str) -> Connection {
         let mut ctx = zmq::Context::new();
 
         let mut socket = match ctx.socket(zmq::REQ) {
@@ -22,32 +24,40 @@ impl Connection {
             Ok(()) => (),
             Err(e) => panic!(e)
         }
+
+        Connection{
+            ctx: ctx,
+            socket: socket
+        }
     }
 
-    // fn get_version() -> String {
-    //     let msg = self.create_message(MessageTypes::GetVersion);
-    //     match socket.send_str(msg, 0) {
-    //         Ok(()) => (),
-    //         Err(e) => get_error(e)
-    //     }
+    pub fn close(&mut self) {
+        let _ = self.socket.close();
+    }
 
-    //     let msg = GetVersionResponse{};
-    //     socket.recv(&mut msg, 0).unwrap();
+    pub fn get_version(&mut self) -> String {
+        let mut req = messages::Request::new();
+        req.set_r_type(messages::Request_RequestType::GET_VERSION);
+        let requests = vec![req];
+        let mut message = messages::Requests::new();
+        message.set_requests(RepeatedField::from_vec(requests));
+        let bytes = message.write_to_bytes().unwrap();
+        self.socket.send(&bytes, 0).unwrap();
 
-    //     return msg.version
-    // }
+        let mut msg = zmq::Message::new().unwrap();
+        self.socket.recv(&mut msg, 0).unwrap();
+        let responses = parse_from_bytes::<messages::Responses>(&msg).unwrap();
+        let response = responses.get_responses().iter().as_slice();
+        let res = response[0].get_get_version_response();
+        return res.get_version().to_string();
+    }
+}
 
-    // fn new_graph(name: str) -> Graph {
-    //     let msg = CreateGraphMessage{};
-    //     self.send_message(msg);
-    // }
 
-    // fn send_message(message: Message) {
-    //     self.socket.send(message)
-    // }
-
-    // fn new_graph_remote(addr: RemoteGraphAddr) -> Graph {
-    // }
+impl Drop for Connection {
+    fn drop(&mut self) {
+        self.close();
+    }
 }
 
 /*

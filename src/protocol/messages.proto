@@ -7,9 +7,7 @@ message ItemCreatedResponse {
 // Version
 
 message GetVersionResponse {
-  required int32 major_version = 1;
-  required int32 minor_version = 2;
-  required int32 patch_version = 3;
+  required string version = 1;
 }
 
 // Renderers
