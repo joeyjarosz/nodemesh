@@ -29,7 +29,7 @@ message CreateRendererRequest {
     required string value = 2;
   }
 
-  required RendererType r_type = 1;
+  required RendererType renderer_type = 1;
   repeated RendererOption options = 2;
   repeated Camera cameras = 3;
   repeated double viewer_matrix_values = 4 [packed=true];
@@ -73,7 +73,7 @@ message Element {
     MESH = 1;
   }
 
-  required ElementType e_type = 1;
+  required ElementType element_type = 1;
   repeated Element children = 2;
 }
 
@@ -118,7 +118,7 @@ message Request {
     DELETE_ELEMENTS_REQUEST = 12;
   }
 
-  required RequestType r_type = 1;
+  required RequestType request_type = 1;
 
   optional CreateRendererRequest create_renderer_request = 2;
   optional DeleteRendererRequest delete_renderer_request = 3;
@@ -146,7 +146,7 @@ message Response {
     ITEM_CREATED = 2;
   }
 
-  required ResponseType r_type = 1;
+  required ResponseType response_type = 1;
   required int64 index = 2;
 
   optional GetVersionResponse get_version_response = 3;

@@ -37,7 +37,7 @@ impl Connection {
 
     pub fn get_version(&mut self) -> String {
         let mut req = messages::Request::new();
-        req.set_r_type(messages::Request_RequestType::GET_VERSION);
+        req.set_request_type(messages::Request_RequestType::GET_VERSION);
         let requests = vec![req];
         let mut message = messages::Requests::new();
         message.set_requests(RepeatedField::from_vec(requests));
