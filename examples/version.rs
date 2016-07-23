@@ -1,9 +1,9 @@
 extern crate libnm;
 
-use libnm::Connection;
+use libnm::Client;
 
 fn main() {
-    let mut conn = Connection::new("tcp://localhost:5555");
-    let version = conn.get_version();
-    println!("{}", version);
+    let mut client = Client::new("tcp://localhost:5555");
+    let version = client.version().send();
+    println!("nmd version: {}", version);
 }

@@ -13,9 +13,9 @@ message GetVersionResponse {
 // Renderers
 
 message Camera {
-  required int64 id = 1;
-  repeated double matrix_values = 2 [packed=true];
-  repeated double projection_matrix_values = 3 [packed=true];
+  required string name = 1;
+  repeated float transform = 2 [packed=true];
+  repeated float projection = 3 [packed=true];
 }
 
 message CreateRendererRequest {
@@ -32,7 +32,7 @@ message CreateRendererRequest {
   required RendererType renderer_type = 1;
   repeated RendererOption options = 2;
   repeated Camera cameras = 3;
-  repeated double viewer_matrix_values = 4 [packed=true];
+  repeated float viewer_transform = 4 [packed=true];
 }
 
 message DeleteRendererRequest {
@@ -41,29 +41,29 @@ message DeleteRendererRequest {
 
 message CreateCameraRequest {
   required int64 renderer_id = 1;
-  repeated Camera camera = 2;
+  required Camera camera = 2;
 }
 
 message DeleteCameraRequest {
   required int64 renderer_id = 1;
-  repeated int64 camera_id = 2;
+  required string camera_name = 2;
 }
 
-message UpdateViewerMatrixRequest {
+message UpdateViewerTransformRequest {
   required int64 renderer_id = 1;
-  repeated double matrix_values = 2 [packed=true];
+  repeated float transform = 2 [packed=true];
 }
 
-message UpdateCameraMatrixRequest {
+message UpdateCameraTransformRequest {
   required int64 renderer_id = 1;
-  required int64 camera_id = 2;
-  repeated double matrix_values = 3 [packed=true];
+  required string camera_name = 2;
+  repeated float transform = 3 [packed=true];
 }
 
 message UpdateCameraProjectionRequest {
   required int64 renderer_id = 1;
-  required int64 camera_id = 2;
-  repeated double matrix_values = 3 [packed=true];
+  required string camera_name = 2;
+  repeated float transform = 3 [packed=true];
 }
 
 // Graph
@@ -106,10 +106,10 @@ message Request {
 
     CREATE_RENDERER = 2;
     DELETE_RENDERER = 3;
-    UPDATE_VIEWER_MATRIX = 4;
+    UPDATE_VIEWER_TRANSFORM = 4;
     CREATE_CAMERA = 5;
     DELETE_CAMERA = 6;
-    UPDATE_CAMERA_MATRIX = 7;
+    UPDATE_CAMERA_TRANSFORM = 7;
     UDPATE_CAMERA_PROJECTION = 8;
 
     CREATE_GRAPH_REQUEST = 9;
@@ -122,10 +122,10 @@ message Request {
 
   optional CreateRendererRequest create_renderer_request = 2;
   optional DeleteRendererRequest delete_renderer_request = 3;
-  optional UpdateViewerMatrixRequest update_viewer_matrix_request = 4;
+  optional UpdateViewerTransformRequest update_viewer_transform_request = 4;
   optional CreateCameraRequest create_camera_request = 5;
   optional DeleteCameraRequest delete_camera_request = 6;
-  optional UpdateCameraMatrixRequest update_camera_matrix_request = 7;
+  optional UpdateCameraTransformRequest update_camera_transform_request = 7;
   optional UpdateCameraProjectionRequest update_camera_projection_request = 8;
 
   optional CreateGraphRequest create_graph_request = 9;

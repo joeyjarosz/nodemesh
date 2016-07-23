@@ -10,3 +10,6 @@ version = "*"
 
 [dependencies.zmq]
 git = "https://github.com/erickt/rust-zmq.git"
+
+[dependencies.nalgebra]
+version = "*"
