@@ -4,6 +4,6 @@ use libnm::Client;
 
 fn main() {
     let mut client = Client::new("tcp://localhost:5555");
-    let version = client.version().send();
+    let version = client.get_version().send();
     println!("nmd version: {}", version);
 }

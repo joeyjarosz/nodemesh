@@ -1,13 +1,12 @@
 extern crate nalgebra as na;
 
-use std::convert::{From};
 use self::na::Matrix4;
 
 pub type Id = i64;
-pub struct Transform(Matrix4<f32>);
+pub struct Transform(pub Matrix4<f32>);
 
 impl Transform {
-    fn from_vec(value: Vec<f32>) -> Transform {
+    pub fn from_vec(value: Vec<f32>) -> Transform {
         Transform(Matrix4::new(
             value[0],
             value[1],

@@ -19,6 +19,12 @@ impl<'a> CreateRendererOperation<'a> {
     ) -> CreateRendererOperation<'a> {
         let mut req = messages::CreateRendererRequest::new();
         req.set_renderer_type(renderer_options.renderer_type());
+        req.set_viewer_transform(vec![
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0,
+            0.0, 0.0, 0.0, 0.0
+        ]);
 
         CreateRendererOperation{
             client: client,
@@ -34,7 +40,7 @@ impl<'a> CreateRendererOperation<'a> {
     }
 
     pub fn with_camera(
-        &mut self, name: &str, camera_options: CameraOptions
+        &mut self, camera_options: CameraOptions
     ) -> &mut CreateRendererOperation<'a> {
         let mut cameras = self.req.get_cameras().to_vec();
         cameras.push(camera_options.msg);
@@ -44,9 +50,11 @@ impl<'a> CreateRendererOperation<'a> {
 
     pub fn send(&mut self) -> Renderer {
         let mut req = messages::Request::new();
+        req.set_request_type(messages::Request_RequestType::CREATE_RENDERER);
         req.set_create_renderer_request(self.req.clone());
         let res = self.client.send(req);
         let renderer_id = res.get_item_created_response().get_item_id();
+        print!("created renderer with id: {}\n", renderer_id);
         Renderer{
             client: self.client,
             id: renderer_id
@@ -70,7 +78,7 @@ impl<'a> UpdateCameraTransformOperation<'a> {
         data.set_camera_name(self.camera_name.to_string());
         data.set_transform(self.transform.to_vec());
         req.set_update_camera_transform_request(data);
-        let res = self.client.send(req);
+        let _ = self.client.send(req);
     }
 }
 
@@ -90,7 +98,7 @@ impl<'a> UpdateCameraProjectionOperation<'a> {
         data.set_camera_name(self.camera_name.to_string());
         data.set_transform(self.projection.to_vec());
         req.set_update_camera_projection_request(data);
-        let res = self.client.send(req);
+        let _ = self.client.send(req);
     }
 }
 
@@ -108,7 +116,7 @@ impl<'a> CreateCameraOperation<'a> {
         data.set_renderer_id(self.renderer_id);
         data.set_camera(self.camera_options.msg.clone());
         req.set_create_camera_request(data);
-        let res = self.client.send(req);
+        let _ = self.client.send(req);
     }
 }
 
@@ -127,7 +135,7 @@ impl<'a> DeleteCameraOperation<'a> {
         data.set_camera_name(self.name.to_string());
         req.set_delete_camera_request(data);
 
-        let res = self.client.send(req);
+        let _ = self.client.send(req);
     }
 }
 
@@ -144,7 +152,7 @@ impl<'a> DeleteRendererOperation<'a> {
         data.set_renderer_id(self.id);
         req.set_delete_renderer_request(data);
 
-        let res = self.client.send(req);
+        let _ = self.client.send(req);
     }
 }
 
@@ -232,6 +240,10 @@ impl<'a> CameraOptions<'a> {
         self.msg.set_projection(projection.to_vec());
         self
     }
+
+    // pub fn finalize(&'a self) -> CameraOptions<'a> {
+    //     self
+    // }
 }
 
 pub trait RendererOptions {
@@ -243,7 +255,16 @@ pub struct WebGLRendererOptions<'a> {
     addr: &'a str
 }
 
+impl<'a> WebGLRendererOptions<'a> {
+    pub fn new(addr: &str) -> WebGLRendererOptions {
+        WebGLRendererOptions{
+            addr: addr
+        }
+    }
+}
+
 impl<'a> RendererOptions for WebGLRendererOptions<'a> {
+
     fn options(&self) -> HashMap<&str, String> {
         let mut options = HashMap::new();
         options.insert("addr", self.addr.to_string());

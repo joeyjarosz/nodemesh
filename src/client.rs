@@ -2,7 +2,7 @@ extern crate zmq;
 
 use protocol::messages;
 use protobuf::{parse_from_bytes, RepeatedField, Message};
-use types::{Id, Transform};
+use types::{Id};
 use renderers::{Renderer, RendererOptions, CreateRendererOperation};
 
 pub struct GetVersionOperation<'a> {
