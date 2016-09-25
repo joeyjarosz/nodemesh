@@ -1,8 +1,8 @@
 // Generic
 
-message ItemCreatedResponse {
-  required int64 item_id = 1;
-}
+// message ItemCreatedResponse {
+//   required int64 item_id = 1;
+// }
 
 // Version
 
@@ -103,15 +103,6 @@ message DeleteElementsRequest {
 message Request {
   enum RequestType {
     GET_VERSION = 1;
-
-    CREATE_RENDERER = 2;
-    DELETE_RENDERER = 3;
-    UPDATE_VIEWER_TRANSFORM = 4;
-    CREATE_CAMERA = 5;
-    DELETE_CAMERA = 6;
-    UPDATE_CAMERA_TRANSFORM = 7;
-    UDPATE_CAMERA_PROJECTION = 8;
-
     CREATE_GRAPH_REQUEST = 9;
     ADD_ELEMENTS_REQUEST = 10;
     UPDATE_ELEMENTS_REQUEST = 11;
@@ -150,7 +141,7 @@ message Response {
   required int64 index = 2;
 
   optional GetVersionResponse get_version_response = 3;
-  optional ItemCreatedResponse item_created_response = 4;
+  // optional ItemCreatedResponse item_created_response = 4;
 }
 
 message Responses {
