@@ -7,6 +7,7 @@ mod client;
 mod types;
 mod transport;
 mod tcp_transport;
+mod node;
 
 pub use client::{Client, pipe, GetVersionResult};
 pub use types::Transform;

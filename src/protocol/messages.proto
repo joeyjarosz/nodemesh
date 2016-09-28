@@ -12,90 +12,99 @@ message GetVersionResponse {
 
 // Renderers
 
-message Camera {
-  required string name = 1;
-  repeated float transform = 2 [packed=true];
-  repeated float projection = 3 [packed=true];
-}
+// message Camera {
+//   required string name = 1;
+//   repeated float transform = 2 [packed=true];
+//   repeated float projection = 3 [packed=true];
+// }
 
-message CreateRendererRequest {
-  enum RendererType {
-    DISPLAY = 1;
-    WEBGL = 2;
+// message CreateRendererRequest {
+//   enum RendererType {
+//     DISPLAY = 1;
+//     WEBGL = 2;
+//   }
+
+//   message RendererOption {
+//     required string key = 1;
+//     required string value = 2;
+//   }
+
+//   required RendererType renderer_type = 1;
+//   repeated RendererOption options = 2;
+//   repeated Camera cameras = 3;
+//   repeated float viewer_transform = 4 [packed=true];
+// }
+
+// message DeleteRendererRequest {
+//   required int64 renderer_id = 1;
+// }
+
+// message CreateCameraRequest {
+//   required int64 renderer_id = 1;
+//   required Camera camera = 2;
+// }
+
+// message DeleteCameraRequest {
+//   required int64 renderer_id = 1;
+//   required string camera_name = 2;
+// }
+
+// message UpdateViewerTransformRequest {
+//   required int64 renderer_id = 1;
+//   repeated float transform = 2 [packed=true];
+// }
+
+// message UpdateCameraTransformRequest {
+//   required int64 renderer_id = 1;
+//   required string camera_name = 2;
+//   repeated float transform = 3 [packed=true];
+// }
+
+// message UpdateCameraProjectionRequest {
+//   required int64 renderer_id = 1;
+//   required string camera_name = 2;
+//   repeated float transform = 3 [packed=true];
+// }
+
+message Node {
+  enum NodeType {
+    EMPTY = 1;
+    MESH = 2;
   }
 
-  message RendererOption {
-    required string key = 1;
-    required string value = 2;
-  }
-
-  required RendererType renderer_type = 1;
-  repeated RendererOption options = 2;
-  repeated Camera cameras = 3;
-  repeated float viewer_transform = 4 [packed=true];
-}
-
-message DeleteRendererRequest {
-  required int64 renderer_id = 1;
-}
-
-message CreateCameraRequest {
-  required int64 renderer_id = 1;
-  required Camera camera = 2;
-}
-
-message DeleteCameraRequest {
-  required int64 renderer_id = 1;
-  required string camera_name = 2;
-}
-
-message UpdateViewerTransformRequest {
-  required int64 renderer_id = 1;
-  repeated float transform = 2 [packed=true];
-}
-
-message UpdateCameraTransformRequest {
-  required int64 renderer_id = 1;
-  required string camera_name = 2;
-  repeated float transform = 3 [packed=true];
-}
-
-message UpdateCameraProjectionRequest {
-  required int64 renderer_id = 1;
-  required string camera_name = 2;
-  repeated float transform = 3 [packed=true];
+  required NodeType node_type = 1;
+  repeated Node children = 2;
 }
 
 // Graph
 
-message Element {
-  enum ElementType {
-    MESH = 1;
-  }
-
-  required ElementType element_type = 1;
-  repeated Element children = 2;
+message AddGraphRequest {
+  repeated Node nodes = 1;
 }
 
-message CreateGraphRequest {
-  repeated Element children = 1;
-}
-
-message AddElementsRequest {
+message UseGraphRequest {
   required int64 graph_id = 1;
-  required int64 parent_id = 2;
+}
+
+message RemoveGraphRequest {
+  required int64 graph_id = 1;
+}
+
+message AddNodesRequest {
+  required int64 graph_id = 1;
+  optional int64 parent_id = 2;
   optional int64 previous_sibling_id = 3;
-  repeated Element added_elements = 4;
+  repeated Node nodes = 4;
 }
 
-message UpdateElementsRequest {
-  required int64 graph_id = 1;
-  // element ids to changed attributes
-}
+// message UpdateElementsRequest {
+//   required int64 graph_id = 1;
+//   // element ids to changed attributes
+// }
 
-message DeleteElementsRequest {
+message RemoveNodesRequest {
   required int64 graph_id = 1;
-  repeated int64 deleted_element_ids = 2;
+  repeated int64 node_ids = 2;
 }
 
 // Request
@@ -103,26 +112,35 @@ message DeleteElementsRequest {
 message Request {
   enum RequestType {
     GET_VERSION = 1;
-    CREATE_GRAPH_REQUEST = 9;
-    ADD_ELEMENTS_REQUEST = 10;
-    UPDATE_ELEMENTS_REQUEST = 11;
-    DELETE_ELEMENTS_REQUEST = 12;
+    ADD_GRAPH_REQUEST = 2;
+    USE_GRAPH_REQUEST = 3;
+    REMOVE_GRAPH_REQUEST = 4;
+    ADD_NODES_REQUEST = 5;
+    // UPDATE_NODES_REQUEST = 6;
+    REMOVE_NODES_REQUEST = 7;
   }
 
   required RequestType request_type = 1;
 
-  optional CreateRendererRequest create_renderer_request = 2;
-  optional DeleteRendererRequest delete_renderer_request = 3;
-  optional UpdateViewerTransformRequest update_viewer_transform_request = 4;
-  optional CreateCameraRequest create_camera_request = 5;
-  optional DeleteCameraRequest delete_camera_request = 6;
-  optional UpdateCameraTransformRequest update_camera_transform_request = 7;
-  optional UpdateCameraProjectionRequest update_camera_projection_request = 8;
+  optional AddGraphRequest add_graph_request = 2;
+  optional UseGraphRequest use_graph_request = 3;
+  optional RemoveGraphRequest remove_graph_request = 4;
+  optional AddNodesRequest add_nodes_request = 5;
+  // optional UpdateNodesRequest update_nodes_request = 2;
+  optional RemoveNodesRequest remove_nodes_request = 6;
 
-  optional CreateGraphRequest create_graph_request = 9;
-  optional AddElementsRequest add_elements_request = 10;
-  optional UpdateElementsRequest update_elements_request = 11;
-  optional DeleteElementsRequest delete_elements_request = 12;
+  // optional CreateRendererRequest create_renderer_request = 2;
+  // optional DeleteRendererRequest delete_renderer_request = 3;
+  // optional UpdateViewerTransformRequest update_viewer_transform_request = 4;
+  // optional CreateCameraRequest create_camera_request = 5;
+  // optional DeleteCameraRequest delete_camera_request = 6;
+  // optional UpdateCameraTransformRequest update_camera_transform_request = 7;
+  // optional UpdateCameraProjectionRequest update_camera_projection_request = 8;
+
+  // optional CreateGraphRequest create_graph_request = 9;
+  // optional AddElementsRequest add_elements_request = 10;
+  // optional UpdateElementsRequest update_elements_request = 11;
+  // optional DeleteElementsRequest delete_elements_request = 12;
 }
 
 message Requests {
@@ -134,14 +152,13 @@ message Requests {
 message Response {
   enum ResponseType {
     GET_VERSION = 1;
-    ITEM_CREATED = 2;
   }
 
   required ResponseType response_type = 1;
+  // The index of the request that the response is for.
   required int64 index = 2;
 
   optional GetVersionResponse get_version_response = 3;
-  // optional ItemCreatedResponse item_created_response = 4;
 }
 
 message Responses {

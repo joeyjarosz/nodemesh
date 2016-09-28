@@ -23,7 +23,7 @@ impl TcpTransport {
     /// Basic usage:
     ///
     /// ```
-    /// let transport = TcpTransport::new("localhost", 12345);
+    /// // let transport = TcpTransport::new("localhost", 12345);
     /// ```
     pub fn new(addr: &str, port: u16) -> Result<TcpTransport, String> {
         let mut ctx = zmq::Context::new();
@@ -81,9 +81,3 @@ impl Transport for TcpTransport {
         };
     }
 }
-
-// impl Drop for TcpTransport {
-//     fn drop(&mut self) {
-//         println!("{}", self.socket.owned);
-//     }
-// }
