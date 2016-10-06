@@ -9,6 +9,6 @@ fn main() {
         .get_version()
         .send(&mut client)
         .unwrap();
-    let result: GetVersionResult = result.get(0);
-    println!("nmd version: {}", result.version);
+    let get_version_result: GetVersionResult = result.get(0);
+    println!("nmd version: {}", get_version_result.version);
 }

@@ -55,7 +55,7 @@ impl FromResponse for AddGraphResult {
     fn from_response(response: &messages::Response) -> Self {
         AddGraphResult{
             graph: Graph{
-                id: 0,
+                id: response.get_index(),
                 // id: response.get_state_added_result().get_id()
             }
         }
@@ -134,9 +134,9 @@ impl<'a> GraphPipeline<'a> {
 
     // }
 
-    fn end(&mut self) -> &mut Pipeline {
-        self.pipeline
-    }
+    // fn end(&mut self) -> &mut Pipeline {
+    //     self.pipeline
+    // }
 }
 
 pub struct Pipeline {

@@ -13,3 +13,4 @@ pub use client::{Client, pipe, GetVersionResult};
 pub use types::Transform;
 pub use transport::Transport;
 pub use tcp_transport::TcpTransport;
+pub use node::{Empty, Mesh};
