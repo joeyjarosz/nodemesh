@@ -10,8 +10,11 @@ use transport::{Transport};
 pub struct TcpTransport {
     addr: String,
     port: u16,
-    ctx: zmq::Context,
-    socket: zmq::Socket
+    // It turns out the fields are dropped in the order that they
+    // are declared. We want the socket to be dropped before the
+    // context. Otherwise, the socket drop will hang indefinitely.
+    socket: zmq::Socket,
+    ctx: zmq::Context
 }
 
 /// TcpTransport sends messages over TCP using ZeroMQ.
@@ -23,7 +26,7 @@ impl TcpTransport {
     /// Basic usage:
     ///
     /// ```
-    /// // let transport = TcpTransport::new("localhost", 12345);
+    /// let transport = TcpTransport::new("localhost", 12345);
     /// ```
     pub fn new(addr: &str, port: u16) -> Result<TcpTransport, String> {
         let mut ctx = zmq::Context::new();

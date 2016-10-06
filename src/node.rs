@@ -1,5 +1,6 @@
 use protocol::messages;
 
+// NodeState behaves like a state machine.
 pub struct NodeState {
     pub id: i64,
     cid: i64,
